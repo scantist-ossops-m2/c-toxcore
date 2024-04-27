@@ -249,9 +249,9 @@ typedef enum Toxav_Err_Call {
  * receiving are both enabled by default.
  *
  * @param friend_number The friend number of the friend that should be called.
- * @param audio_bit_rate Audio bit rate in Kb/sec. Set this to 0 to disable
+ * @param audio_bit_rate Audio bit rate in kbit/sec. Set this to 0 to disable
  *   audio sending.
- * @param video_bit_rate Video bit rate in Kb/sec. Set this to 0 to disable
+ * @param video_bit_rate Video bit rate in kbit/sec. Set this to 0 to disable
  *   video sending.
  */
 bool toxav_call(ToxAV *av, uint32_t friend_number, uint32_t audio_bit_rate, uint32_t video_bit_rate,
@@ -318,9 +318,9 @@ typedef enum Toxav_Err_Answer {
  * enabled by default.
  *
  * @param friend_number The friend number of the friend that is calling.
- * @param audio_bit_rate Audio bit rate in Kb/sec. Set this to 0 to disable
+ * @param audio_bit_rate Audio bit rate in kbit/sec. Set this to 0 to disable
  *   audio sending.
- * @param video_bit_rate Video bit rate in Kb/sec. Set this to 0 to disable
+ * @param video_bit_rate Video bit rate in kbit/sec. Set this to 0 to disable
  *   video sending.
  */
 bool toxav_answer(ToxAV *av, uint32_t friend_number, uint32_t audio_bit_rate, uint32_t video_bit_rate,
@@ -600,11 +600,11 @@ bool toxav_audio_send_frame(ToxAV *av, uint32_t friend_number, const int16_t pcm
                             uint8_t channels, uint32_t sampling_rate, Toxav_Err_Send_Frame *error);
 
 /**
- * Set the bit rate to be used in subsequent video frames.
+ * Set the bit rate to be used in subsequent audio frames.
  *
  * @param friend_number The friend number of the friend for which to set the
  *   bit rate.
- * @param bit_rate The new audio bit rate in Kb/sec. Set to 0 to disable.
+ * @param bit_rate The new audio bit rate in kbit/sec. Set to 0 to disable.
  *
  * @return true on success.
  */
@@ -617,7 +617,7 @@ bool toxav_audio_set_bit_rate(ToxAV *av, uint32_t friend_number, uint32_t bit_ra
  *
  * @param friend_number The friend number of the friend for which to set the
  *   bit rate.
- * @param audio_bit_rate Suggested maximum audio bit rate in Kb/sec.
+ * @param audio_bit_rate Suggested maximum audio bit rate in kbit/sec.
  */
 typedef void toxav_audio_bit_rate_cb(ToxAV *av, uint32_t friend_number, uint32_t audio_bit_rate, void *user_data);
 
@@ -630,9 +630,10 @@ void toxav_callback_audio_bit_rate(ToxAV *av, toxav_audio_bit_rate_cb *callback,
 /**
  * Send a video frame to a friend.
  *
- * Y - plane should be of size: `height * width`
- * U - plane should be of size: `(height/2) * (width/2)`
- * V - plane should be of size: `(height/2) * (width/2)`
+ * The video frame needs to be planar YUV420.
+ * Y - plane should be of size: `width * height`
+ * U - plane should be of size: `(width/2) * (height/2)`
+ * V - plane should be of size: `(width/2) * (height/2)`
  *
  * @param friend_number The friend number of the friend to which to send a video
  *   frame.
@@ -644,9 +645,9 @@ void toxav_callback_audio_bit_rate(ToxAV *av, toxav_audio_bit_rate_cb *callback,
  */
 bool toxav_video_send_frame(
     ToxAV *av, uint32_t friend_number, uint16_t width, uint16_t height,
-    const uint8_t y[/*! height * width */],
-    const uint8_t u[/*! height/2 * width/2 */],
-    const uint8_t v[/*! height/2 * width/2 */],
+    const uint8_t y[/*! width * height */],
+    const uint8_t u[/*! width/2 * height/2 */],
+    const uint8_t v[/*! width/2 * height/2 */],
     Toxav_Err_Send_Frame *error);
 
 /**
@@ -654,7 +655,7 @@ bool toxav_video_send_frame(
  *
  * @param friend_number The friend number of the friend for which to set the
  *   bit rate.
- * @param bit_rate The new video bit rate in Kb/sec. Set to 0 to disable.
+ * @param bit_rate The new video bit rate in kbit/sec. Set to 0 to disable.
  *
  * @return true on success.
  */
@@ -667,7 +668,7 @@ bool toxav_video_set_bit_rate(ToxAV *av, uint32_t friend_number, uint32_t bit_ra
  *
  * @param friend_number The friend number of the friend for which to set the
  *   bit rate.
- * @param video_bit_rate Suggested maximum video bit rate in Kb/sec.
+ * @param video_bit_rate Suggested maximum video bit rate in kbit/sec.
  */
 typedef void toxav_video_bit_rate_cb(ToxAV *av, uint32_t friend_number, uint32_t video_bit_rate, void *user_data);
 
