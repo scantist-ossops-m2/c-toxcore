@@ -141,9 +141,7 @@ jobs:
       - run: *apt_install
       - run:
           apt-get install -y --no-install-recommends
-            ca-certificates
-            python3-pip
+            cpplint
       - checkout
       - run: git submodule update --init --recursive
-      - run: pip install cpplint
       - run: other/analysis/run-cpplint
