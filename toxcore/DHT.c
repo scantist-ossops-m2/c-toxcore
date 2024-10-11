@@ -1855,7 +1855,7 @@ bool dht_bootstrap_from_address(DHT *dht, const char *address, bool ipv6enabled,
         ip_extra = &ip_port_v4.ip;
     }
 
-    if (addr_resolve_or_parse_ip(dht->ns, address, &ip_port_v64.ip, ip_extra, dns_enabled)) {
+    if (addr_resolve_or_parse_ip(dht->ns, dht->mem, address, &ip_port_v64.ip, ip_extra, dns_enabled)) {
         ip_port_v64.port = port;
         dht_bootstrap(dht, &ip_port_v64, public_key);
 

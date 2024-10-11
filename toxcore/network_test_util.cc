@@ -3,6 +3,7 @@
 #include <iomanip>
 
 #include "crypto_core.h"
+#include "mem.h"
 #include "network.h"
 #include "test_util.hh"
 
@@ -75,13 +76,14 @@ int Test_Network::setsockopt(
 {
     return net->funcs->setsockopt(net->obj, sock, level, optname, optval, optlen);
 }
-int Test_Network::getaddrinfo(void *obj, int family, Network_Addr **addrs)
+int Test_Network::getaddrinfo(void *obj, const Memory *mem, const char *address, int family,
+    int protocol, Network_Addr **addrs)
 {
-    return net->funcs->getaddrinfo(net->obj, family, addrs);
+    return net->funcs->getaddrinfo(net->obj, mem, address, family, protocol, addrs);
 }
-int Test_Network::freeaddrinfo(void *obj, Network_Addr *addrs)
+int Test_Network::freeaddrinfo(void *obj, const Memory *mem, Network_Addr *addrs)
 {
-    return net->funcs->freeaddrinfo(net->obj, addrs);
+    return net->funcs->freeaddrinfo(net->obj, mem, addrs);
 }
 
 Network_Class::~Network_Class() = default;

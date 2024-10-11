@@ -4,6 +4,7 @@
 #include <iosfwd>
 
 #include "crypto_core.h"
+#include "mem.h"
 #include "network.h"
 #include "test_util.hh"
 
@@ -62,8 +63,9 @@ class Test_Network : public Network_Class {
         void *obj, Socket sock, int level, int optname, void *optval, size_t *optlen) override;
     int setsockopt(
         void *obj, Socket sock, int level, int optname, const void *optval, size_t optlen) override;
-    int getaddrinfo(void *obj, int family, Network_Addr **addrs) override;
-    int freeaddrinfo(void *obj, Network_Addr *addrs) override;
+    int getaddrinfo(void *obj, const Memory *mem, const char *address, int family, int protocol,
+        Network_Addr **addrs) override;
+    int freeaddrinfo(void *obj, const Memory *mem, Network_Addr *addrs) override;
 };
 
 template <>

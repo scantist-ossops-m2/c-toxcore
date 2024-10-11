@@ -860,7 +860,7 @@ static Tox *tox_new_system(const struct Tox_Options *options, Tox_Err_New *error
         const bool dns_enabled = !tox_options_get_experimental_disable_dns(opts);
 
         if (proxy_host == nullptr
-                || !addr_resolve_or_parse_ip(tox->sys.ns, proxy_host, &m_options.proxy_info.ip_port.ip, nullptr, dns_enabled)) {
+                || !addr_resolve_or_parse_ip(tox->sys.ns, tox->sys.mem, proxy_host, &m_options.proxy_info.ip_port.ip, nullptr, dns_enabled)) {
             SET_ERROR_PARAMETER(error, TOX_ERR_NEW_PROXY_BAD_HOST);
             // TODO(irungentoo): TOX_ERR_NEW_PROXY_NOT_FOUND if domain.
             mem_delete(sys->mem, tox);
@@ -1142,7 +1142,7 @@ static int32_t resolve_bootstrap_node(Tox *tox, const char *host, uint16_t port,
         return -1;
     }
 
-    const int32_t count = net_getipport(tox->sys.mem, host, root, TOX_SOCK_DGRAM, tox->m->options.dns_enabled);
+    const int32_t count = net_getipport(tox->sys.ns, tox->sys.mem, host, root, TOX_SOCK_DGRAM, tox->m->options.dns_enabled);
 
     if (count < 1) {
         LOGGER_DEBUG(tox->m->log, "could not resolve bootstrap node '%s'", host);

@@ -333,6 +333,7 @@ cc_library(
     hdrs = ["network_test_util.hh"],
     deps = [
         ":crypto_core",
+        ":mem",
         ":network",
         ":test_util",
     ],
