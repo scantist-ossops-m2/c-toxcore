@@ -1,5 +1,6 @@
 ---
 bazel-opt_task:
+  timeout_in: 5m
   container:
     image: toxchat/toktok-stack:latest-release
     cpu: 2
@@ -17,6 +18,7 @@ bazel-opt_task:
         -//c-toxcore/auto_tests:tcp_relay_test # Cirrus doesn't allow external network connections.
 
 bazel-dbg_task:
+  timeout_in: 5m
   container:
     image: toxchat/toktok-stack:latest-debug
     cpu: 2
@@ -34,6 +36,7 @@ bazel-dbg_task:
         -//c-toxcore/auto_tests:tcp_relay_test # Cirrus doesn't allow external network connections.
 
 cimple_task:
+  timeout_in: 5m
   container:
     image: toxchat/toktok-stack:latest-release
     cpu: 2
@@ -50,6 +53,7 @@ cimple_task:
         //c-toxcore/...
 
 freebsd_task:
+  timeout_in: 5m
   freebsd_instance:
     image_family: freebsd-14-1
   configure_script:
