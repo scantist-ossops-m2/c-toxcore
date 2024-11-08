@@ -2891,6 +2891,11 @@ typedef enum Tox_Err_Conference_Join {
      */
     TOX_ERR_CONFERENCE_JOIN_FAIL_SEND,
 
+    /**
+     * The cookie passed was NULL.
+     */
+    TOX_ERR_CONFERENCE_JOIN_NULL,
+
 } Tox_Err_Conference_Join;
 
 const char *tox_err_conference_join_to_string(Tox_Err_Conference_Join value);
@@ -4994,6 +4999,11 @@ typedef enum Tox_Err_Group_Invite_Accept {
      * Packet failed to send.
      */
     TOX_ERR_GROUP_INVITE_ACCEPT_FAIL_SEND,
+
+    /**
+     * Invite data or name is NULL.
+     */
+    TOX_ERR_GROUP_INVITE_ACCEPT_NULL,
 
 } Tox_Err_Group_Invite_Accept;
 
