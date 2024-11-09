@@ -53,7 +53,7 @@ static void test_basic(void)
     ck_assert(mem != nullptr);
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
     logger_callback_log(logger, print_debug_logger, nullptr, nullptr);
 
     // Attempt to create a new TCP_Server instance.
@@ -312,7 +312,7 @@ static void test_some(void)
     ck_assert(mem != nullptr);
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
 
     uint8_t self_public_key[CRYPTO_PUBLIC_KEY_SIZE];
     uint8_t self_secret_key[CRYPTO_SECRET_KEY_SIZE];
@@ -506,7 +506,7 @@ static void test_client(void)
     const Memory *mem = os_memory();
     ck_assert(mem != nullptr);
 
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
 
     uint8_t self_public_key[CRYPTO_PUBLIC_KEY_SIZE];
@@ -643,7 +643,7 @@ static void test_client_invalid(void)
     ck_assert(mem != nullptr);
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
 
     uint8_t self_public_key[CRYPTO_PUBLIC_KEY_SIZE];
     uint8_t self_secret_key[CRYPTO_SECRET_KEY_SIZE];
@@ -721,7 +721,7 @@ static void test_tcp_connection(void)
     ck_assert(mem != nullptr);
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
 
     tcp_data_callback_called = 0;
     uint8_t self_public_key[CRYPTO_PUBLIC_KEY_SIZE];
@@ -834,7 +834,7 @@ static void test_tcp_connection2(void)
     ck_assert(mem != nullptr);
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
-    Logger *logger = logger_new();
+    Logger *logger = logger_new(mem);
 
     tcp_oobdata_callback_called = 0;
     tcp_data_callback_called = 0;

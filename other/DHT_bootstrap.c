@@ -144,15 +144,15 @@ int main(int argc, char *argv[])
     IP ip;
     ip_init(&ip, ipv6enabled);
 
-    Logger *logger = logger_new();
+    const Random *rng = os_random();
+    const Network *ns = os_network();
+    const Memory *mem = os_memory();
+
+    Logger *logger = logger_new(mem);
 
     if (MIN_LOGGER_LEVEL <= LOGGER_LEVEL_DEBUG) {
         logger_callback_log(logger, print_log, nullptr, nullptr);
     }
-
-    const Random *rng = os_random();
-    const Network *ns = os_network();
-    const Memory *mem = os_memory();
 
     Mono_Time *mono_time = mono_time_new(mem, nullptr, nullptr);
     const uint16_t start_port = PORT;

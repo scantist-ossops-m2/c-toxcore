@@ -121,6 +121,7 @@ cc_library(
     deps = [
         ":attributes",
         ":ccompat",
+        ":mem",
     ],
 )
 
