@@ -889,7 +889,11 @@ bool set_socket_nosigpipe(const Network *ns, Socket sock)
 bool set_socket_reuseaddr(const Network *ns, Socket sock)
 {
     int set = 1;
+#if defined(OS_WIN32)
+    return net_setsockopt(ns, sock, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, &set, sizeof(set)) == 0;
+#else
     return net_setsockopt(ns, sock, SOL_SOCKET, SO_REUSEADDR, &set, sizeof(set)) == 0;
+#endif /* OS_WIN32 */
 }
 
 bool set_socket_dualstack(const Network *ns, Socket sock)
