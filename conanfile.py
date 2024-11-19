@@ -2,20 +2,26 @@
 import os
 import re
 
-from conans import CMake
-from conans import ConanFile
-from conans.tools import collect_libs
-from conans.tools import load
+from conan import ConanFile
+from conan.tools.cmake import CMake
+from conan.tools.cmake import cmake_layout
+from conan.tools.cmake import CMakeDeps
+from conan.tools.cmake import CMakeToolchain
+from conan.tools.files import collect_libs
+from conan.tools.files import load
 
 
 class ToxConan(ConanFile):
-    name = "c-toxcore"
+    name = "toxcore"
     url = "https://tox.chat"
     description = "The future of online communications."
     license = "GPL-3.0-only"
     settings = "os", "compiler", "build_type", "arch"
-    requires = "libsodium/1.0.18", "opus/1.3.1", "libvpx/1.9.0"
-    generators = "cmake_find_package"
+    requires = (
+        "libsodium/1.0.20",
+        "opus/1.4",
+        "libvpx/1.14.1",
+    )
     scm = {"type": "git", "url": "auto", "revision": "auto"}
 
     options = {
@@ -27,32 +33,9 @@ class ToxConan(ConanFile):
         "with_tests": False,
     }
 
-    _cmake = None
-
-    def _create_cmake(self):
-        if self._cmake is not None:
-            return self._cmake
-
-        self._cmake = CMake(self)
-        self._cmake.definitions["AUTOTEST"] = self.options.with_tests
-        self._cmake.definitions["BUILD_MISC_TESTS"] = self.options.with_tests
-        self._cmake.definitions["TEST_TIMEOUT_SECONDS"] = "300"
-
-        self._cmake.definitions[
-            "CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
-        self._cmake.definitions["ENABLE_SHARED"] = self.options.shared
-        self._cmake.definitions["ENABLE_STATIC"] = not self.options.shared
-        self._cmake.definitions["MUST_BUILD_TOXAV"] = True
-        if self.settings.compiler == "Visual Studio":
-            self._cmake.definitions["MSVC_STATIC_SODIUM"] = True
-            self._cmake.definitions[
-                "FLAT_OUTPUT_STRUCTURE"] = self.options.shared
-
-        self._cmake.configure()
-        return self._cmake
-
     def set_version(self):
-        content = load(os.path.join(self.recipe_folder, "CMakeLists.txt"))
+        content = load(self, os.path.join(self.recipe_folder,
+                                          "CMakeLists.txt"))
         version_major = re.search(r"set\(PROJECT_VERSION_MAJOR \"(.*)\"\)",
                                   content).group(1)
         version_minor = re.search(r"set\(PROJECT_VERSION_MINOR \"(.*)\"\)",
@@ -68,16 +51,42 @@ class ToxConan(ConanFile):
     def requirements(self):
         if self.settings.os == "Windows":
             self.requires("pthreads4w/3.0.0")
+        if self.options.with_tests:
+            self.build_requires("gtest/1.15.0")
+
+    def layout(self):
+        cmake_layout(self)
+
+    def generate(self):
+        deps = CMakeDeps(self)
+        deps.generate()
+        tc = CMakeToolchain(self)
+        tc.variables["AUTOTEST"] = self.options.with_tests
+        tc.variables["BUILD_MISC_TESTS"] = self.options.with_tests
+        tc.variables["UNITTEST"] = self.options.with_tests
+        tc.variables["TEST_TIMEOUT_SECONDS"] = "300"
+
+        tc.variables["ENABLE_SHARED"] = self.options.shared
+        tc.variables["ENABLE_STATIC"] = not self.options.shared
+
+        tc.variables["MUST_BUILD_TOXAV"] = True
+
+        if self.settings.os == "Windows":
+            tc.variables["MSVC_STATIC_SODIUM"] = True
+            tc.variables[
+                "CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = self.options.shared
+            tc.variables["FLAT_OUTPUT_STRUCTURE"] = self.options.shared
+        tc.generate()
 
     def build(self):
-        cmake = self._create_cmake()
+        cmake = CMake(self)
+        cmake.configure()
         cmake.build()
-
         if self.options.with_tests:
-            cmake.test(output_on_failure=True)
+            cmake.ctest(cli_args=["--output-on-failure"])
 
     def package(self):
-        cmake = self._create_cmake()
+        cmake = CMake(self)
         cmake.install()
 
     def package_info(self):
