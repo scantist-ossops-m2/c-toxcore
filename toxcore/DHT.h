@@ -99,7 +99,7 @@ extern "C" {
  * @return the length of the created packet on success.
  */
 non_null()
-int create_request(const Random *rng, const uint8_t *send_public_key, const uint8_t *send_secret_key,
+int create_request(const Memory *mem, const Random *rng, const uint8_t *send_public_key, const uint8_t *send_secret_key,
                    uint8_t *packet, const uint8_t *recv_public_key,
                    const uint8_t *data, uint32_t data_length, uint8_t request_id);
 
@@ -127,7 +127,7 @@ int create_request(const Random *rng, const uint8_t *send_public_key, const uint
  */
 non_null()
 int handle_request(
-    const uint8_t *self_public_key, const uint8_t *self_secret_key, uint8_t *public_key, uint8_t *data,
+    const Memory *mem, const uint8_t *self_public_key, const uint8_t *self_secret_key, uint8_t *public_key, uint8_t *data,
     uint8_t *request_id, const uint8_t *packet, uint16_t packet_length);
 
 typedef struct IPPTs {

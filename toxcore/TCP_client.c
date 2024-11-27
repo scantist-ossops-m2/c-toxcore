@@ -312,7 +312,7 @@ static int generate_handshake(TCP_Client_Connection *tcp_conn)
     memcpy(plain + CRYPTO_PUBLIC_KEY_SIZE, tcp_conn->con.sent_nonce, CRYPTO_NONCE_SIZE);
     memcpy(tcp_conn->con.last_packet, tcp_conn->self_public_key, CRYPTO_PUBLIC_KEY_SIZE);
     random_nonce(tcp_conn->con.rng, tcp_conn->con.last_packet + CRYPTO_PUBLIC_KEY_SIZE);
-    const int len = encrypt_data_symmetric(tcp_conn->con.shared_key, tcp_conn->con.last_packet + CRYPTO_PUBLIC_KEY_SIZE, plain,
+    const int len = encrypt_data_symmetric(tcp_conn->con.mem, tcp_conn->con.shared_key, tcp_conn->con.last_packet + CRYPTO_PUBLIC_KEY_SIZE, plain,
                                            sizeof(plain), tcp_conn->con.last_packet + CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE);
 
     if (len != sizeof(plain) + CRYPTO_MAC_SIZE) {
@@ -334,7 +334,7 @@ non_null()
 static int handle_handshake(TCP_Client_Connection *tcp_conn, const uint8_t *data)
 {
     uint8_t plain[CRYPTO_PUBLIC_KEY_SIZE + CRYPTO_NONCE_SIZE];
-    const int len = decrypt_data_symmetric(tcp_conn->con.shared_key, data, data + CRYPTO_NONCE_SIZE,
+    const int len = decrypt_data_symmetric(tcp_conn->con.mem, tcp_conn->con.shared_key, data, data + CRYPTO_NONCE_SIZE,
                                            TCP_SERVER_HANDSHAKE_SIZE - CRYPTO_NONCE_SIZE, plain);
 
     if (len != sizeof(plain)) {
