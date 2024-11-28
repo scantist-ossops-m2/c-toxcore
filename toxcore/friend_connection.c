@@ -875,7 +875,7 @@ void set_friend_request_callback(Friend_Connections *fr_c, fr_request_cb *fr_req
 int send_friend_request_packet(Friend_Connections *fr_c, int friendcon_id, uint32_t nospam_num, const uint8_t *data,
                                uint16_t length)
 {
-    // FIXME: This max packet size is too large to be handled by receiving clients
+    // TODO(Jfreegman): This max packet size is too large to be handled by receiving clients
     // when sent via the onion. We currently limit the length at a higher level, but
     // this bounds check should be fixed to represent the max size of a packet that
     // the onion client can handle.
