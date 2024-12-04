@@ -301,6 +301,8 @@ static void test_very_large_data(void)
     ck_assert(plain != nullptr);
     ck_assert(encrypted != nullptr);
 
+    memset(plain, 0, plain_size);
+
     encrypt_data(mem, pk, sk, nonce, plain, plain_size, encrypted);
 
     free(encrypted);
