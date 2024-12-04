@@ -4,8 +4,15 @@
 
 #include "fuzz_support.hh"
 
+#ifdef _WIN32
+#include <winsock2.h>
+// Comment line here to avoid reordering by source code formatters.
+#include <windows.h>
+#include <ws2tcpip.h>
+#else
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#endif
 
 #include <algorithm>
 #include <cassert>

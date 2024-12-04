@@ -496,7 +496,11 @@ cc_library(
     name = "onion",
     srcs = ["onion.c"],
     hdrs = ["onion.h"],
-    visibility = ["//c-toxcore/auto_tests:__pkg__"],
+    visibility = [
+        "//c-toxcore/auto_tests:__pkg__",
+        "//c-toxcore/other:__pkg__",
+        "//c-toxcore/other/bootstrap_daemon:__pkg__",
+    ],
     deps = [
         ":DHT",
         ":attributes",
@@ -515,7 +519,11 @@ cc_library(
     name = "forwarding",
     srcs = ["forwarding.c"],
     hdrs = ["forwarding.h"],
-    visibility = ["//c-toxcore/auto_tests:__pkg__"],
+    visibility = [
+        "//c-toxcore/auto_tests:__pkg__",
+        "//c-toxcore/other:__pkg__",
+        "//c-toxcore/other/bootstrap_daemon:__pkg__",
+    ],
     deps = [
         ":DHT",
         ":attributes",
